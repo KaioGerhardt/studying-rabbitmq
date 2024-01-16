@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+  nginx:
+    container_name: nginx
+    build: docker/nginx
+    command: nginx -g "daemon off;"
+    links:
+     - php
+    ports:
+      - "8081:80"
+    networks:
+      - app-network
+
+  php:
+    container_name: php
+    build: docker/php
+    volumes:
+      - ./api:/var/www/html
+    working_dir: /var/www/html/app/public
+    command: php-fpm
+    ports:
+      - "9000:9000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
